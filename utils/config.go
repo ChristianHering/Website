@@ -8,7 +8,7 @@ import (
 	"reflect"
 )
 
-func setConfig() error {
+func setupConfig() error {
 	value, err := getConfig("config.json", defaultConfig)
 	if err != nil {
 		return err

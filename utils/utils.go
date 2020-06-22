@@ -1,8 +1,15 @@
 package utils
 
-func runConfigSetup() error {
-	err := setConfig()
+func RunUtilSetup() error {
+	err := setupConfig()
 	if err != nil {
 		return err
 	}
+
+	err := setupSQL()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

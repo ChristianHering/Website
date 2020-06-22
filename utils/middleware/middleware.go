@@ -13,7 +13,7 @@ func ErrorHandler(next http.Handler) http.Handler {
 	f := func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
-				err = fmt.Sprintf("%+v", errors.WithStack(err))
+				err = fmt.Sprintf("%+v", errors.WithStack(err.(error)))
 				log.Println(err) //TODO log this to mysql
 			}
 		}()

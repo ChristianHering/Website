@@ -1,7 +1,9 @@
-package main
+package admin
 
 import (
-	"github.com/ChristianHering/utils/middleware"
+	"net/http"
+
+	"github.com/ChristianHering/Website/utils/middleware"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
 )
@@ -11,7 +13,10 @@ func Run(m *mux.Router) error {
 
 	middlewares := alice.New(middleware.ErrorHandler, middleware.StatisticsHandler)
 
-	mux.Handle(middlewares.Then(myHandler))
+	mux.Handle("/", middlewares.ThenFunc(myHandler))
 
 	return nil
+}
+
+func myHandler(w http.ResponseWriter, r *http.Request) {
 }

@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/ChristianHering/admin"
-	"github.com/ChristianHering/blog"
-	"github.com/ChristianHering/consulting"
-	"github.com/ChristianHering/docs"
-	"github.com/ChristianHering/portfolio"
+	"github.com/ChristianHering/Website/admin"
+	"github.com/ChristianHering/Website/blog"
+	"github.com/ChristianHering/Website/consulting"
+	"github.com/ChristianHering/Website/docs"
+	"github.com/ChristianHering/Website/portfolio"
+	"github.com/ChristianHering/Website/utils"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 )
 
 func main() {
-	err := utils.runConfigSetup() //Utility initialization routine
+	err := utils.RunUtilSetup() //Utility initialization routine
 	if err != nil {
 		panic(fmt.Sprintf("%+v", errors.WithStack(err)))
 	}
