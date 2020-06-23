@@ -26,7 +26,6 @@ func StatisticsHandler(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 
-		fmt.Println(r.Host, r.URL.String()) //TODO
-		fmt.Println(time.Since(start))      //TODO log this to mysql
+		utils.LogPageLatency(time.Since(start), r.Host, r.URL.String())
 	})
 }

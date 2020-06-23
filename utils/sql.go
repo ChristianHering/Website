@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/pkg/errors"
@@ -69,4 +70,24 @@ func LogError(e string, host string, url string) {
 		log.Println("Failed to log the following error to errors DB", err)
 		log.Println("Error encountered: ", fmt.Sprintf("%+v", errors.WithStack(err)))
 	}
+}
+
+var pageAdverageLatency map[string]float64 = make(map[string]float64)
+var pageLatencyCount map[string]int = make(map[string]int)
+
+var siteAdverageLatency map[string]float64 = make(map[string]float64)
+var siteLatencyCount map[string]int = make(map[string]int)
+
+//Calculates the average latency for a request's page
+//and site, then stores the results in a hashmap
+func LogPageLatency(latency time.Duration, host string, url string) {
+	count := siteLatencyCount[host] //Latency statistics for a request's subdomain
+	siteAdverageLatency[host] = (siteAdverageLatency[host]*float64(count) + latency.Seconds()) / float64(count+1)
+	siteLatencyCount[host] = count + 1
+
+	count = pageLatencyCount[host+url] //Latency statistics for a request's page
+	pageAdverageLatency[host+url] = (pageAdverageLatency[host+url]*float64(count) + latency.Seconds()) / float64(count+1)
+	pageLatencyCount[host+url] = count + 1
+
+	fmt.Println(pageAdverageLatency, siteAdverageLatency, pageLatencyCount, siteLatencyCount)
 }
