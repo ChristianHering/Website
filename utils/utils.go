@@ -6,7 +6,9 @@ func RunUtilSetup() error {
 		return err
 	}
 
-	err := setupSQL()
+	errChan := make(chan error)
+	go setupSQL(errChan)
+	err = <-errChan
 	if err != nil {
 		return err
 	}

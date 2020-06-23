@@ -5,21 +5,22 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"reflect"
+
+	"github.com/pkg/errors"
 )
 
 func setupConfig() error {
-	value, err := getConfig("config.json", defaultConfig)
+	Config = defaultConfig
+	err := getConfig("config.json", &Config)
 	if err != nil {
 		return err
 	}
-	Config = value.Interface().(ConfigStruct)
 
-	value, err = getConfig("secrets.json", defaultSecrets)
+	Secrets = defaultSecrets
+	err = getConfig("secrets.json", &Secrets)
 	if err != nil {
 		return err
 	}
-	Secrets = value.Interface().(SecretsStruct)
 
 	return nil
 }
@@ -28,9 +29,20 @@ var Config ConfigStruct
 var Secrets SecretsStruct
 
 type ConfigStruct struct { //TODO populate defaults, and create config/secret struct
+	SqlConfig SQLConfig
+}
+
+type SQLConfig struct {
+	Nodes string
 }
 
 type SecretsStruct struct {
+	SqlSecrets SQLSecrets
+}
+
+type SQLSecrets struct {
+	Username string
+	Password string
 }
 
 var defaultConfig = ConfigStruct{}
@@ -40,37 +52,35 @@ var defaultSecrets = SecretsStruct{}
 //Gets the configuration from a file name or creates
 //a new config file if one doesn't already exist
 //
-//To use fill a struct or use the return value, call
-//configuration.Interface().(TheTypeOfDefaultConfig)
-func getConfig(configFileName string, defaultConfig interface{}) (configuration reflect.Value, err error) {
+//To use pass a pointer to a struct initialized with default values
+func getConfig(configFileName string, configPointer interface{}) error {
 	if fileExists(configFileName) { //Get existing configuration from configFileName
 		b, err := ioutil.ReadFile(configFileName)
-
-		config := reflect.ValueOf(defaultConfig) //We're only doing this for it's type
-
-		err = json.Unmarshal(b, &config)
 		if err != nil {
-			fmt.Println("Failed to unmarshal configuration file")
-			return reflect.Value{}, err
+			return errors.WithStack(err)
 		}
 
-		return config, nil
-	} else { //If configFileName doesn't exist, create a new config file
-		config := reflect.ValueOf(defaultConfig)
+		err = json.Unmarshal(b, configPointer)
+		if err != nil {
+			fmt.Println("Failed to unmarshal configuration file")
+			return errors.WithStack(err)
+		}
 
-		b, err := json.MarshalIndent(config.Interface(), "", " ")
+		return nil
+	} else { //If configFileName doesn't exist, create a new config file
+		b, err := json.MarshalIndent(configPointer, "", " ")
 		if err != nil {
 			fmt.Println("Failed to marshal configuration file")
-			return reflect.Value{}, err
+			return errors.WithStack(err)
 		}
 
 		err = ioutil.WriteFile(configFileName, b, 0644)
 		if err != nil {
 			fmt.Println("Failed to write configuration file")
-			return reflect.Value{}, err
+			return errors.WithStack(err)
 		}
 
-		return config, nil //Return default configuration
+		return nil
 	}
 }
 

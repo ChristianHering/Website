@@ -17,7 +17,7 @@ import (
 func main() {
 	err := utils.RunUtilSetup() //Utility initialization routine
 	if err != nil {
-		panic(fmt.Sprintf("%+v", errors.WithStack(err)))
+		panic(err)
 	}
 
 	mux := mux.NewRouter()

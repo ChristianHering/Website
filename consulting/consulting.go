@@ -1,6 +1,7 @@
 package consulting
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/ChristianHering/Website/utils/middleware"
@@ -9,7 +10,7 @@ import (
 )
 
 func Run(m *mux.Router) error {
-	mux := m.Host("consulting.christianhering.com").Subrouter()
+	mux := m.Host("christianhering.com").Subrouter()
 
 	middlewares := alice.New(middleware.ErrorHandler, middleware.StatisticsHandler)
 
@@ -19,4 +20,5 @@ func Run(m *mux.Router) error {
 }
 
 func myHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 }
