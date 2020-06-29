@@ -11,6 +11,7 @@ import (
 
 var session *gocql.Session
 
+//Connects to our cassandra cluster
 func setupSQL(channel chan error) {
 	var err error
 
@@ -88,6 +89,4 @@ func LogPageLatency(latency time.Duration, host string, url string) {
 	count = pageLatencyCount[host+url] //Latency statistics for a request's page
 	pageAdverageLatency[host+url] = (pageAdverageLatency[host+url]*float64(count) + latency.Seconds()) / float64(count+1)
 	pageLatencyCount[host+url] = count + 1
-
-	fmt.Println(pageAdverageLatency, siteAdverageLatency, pageLatencyCount, siteLatencyCount)
 }

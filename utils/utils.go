@@ -1,5 +1,6 @@
 package utils
 
+//Initialization for our utility functions
 func RunUtilSetup() error {
 	err := setupConfig()
 	if err != nil {
@@ -12,6 +13,8 @@ func RunUtilSetup() error {
 	if err != nil {
 		return err
 	}
+
+	setupAuth()
 
 	return nil
 }

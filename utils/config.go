@@ -9,6 +9,46 @@ import (
 	"github.com/pkg/errors"
 )
 
+var Config ConfigStruct
+var Secrets SecretsStruct
+
+//Main Configuration Struct
+
+type ConfigStruct struct { //TODO populate defaults, and create config/secret struct
+	SqlConfig  SQLConfig
+	AuthConfig AuthenticationConfig
+}
+
+type SQLConfig struct {
+	Nodes string
+}
+
+type AuthenticationConfig struct {
+	Auth0Domain   string //OpenID Provider URL
+	Auth0ClientID string
+}
+
+//Main Secrets Struct
+
+type SecretsStruct struct {
+	SqlSecrets  SQLSecrets
+	AuthSecrets AuthenticationSecrets
+}
+
+type SQLSecrets struct {
+	Username string
+	Password string
+}
+
+type AuthenticationSecrets struct {
+	CookieStoreKeys   [][]byte
+	Auth0ClientSecret string
+}
+
+var defaultConfig = ConfigStruct{}
+
+var defaultSecrets = SecretsStruct{}
+
 func setupConfig() error {
 	Config = defaultConfig
 	err := getConfig("config.json", &Config)
@@ -24,30 +64,6 @@ func setupConfig() error {
 
 	return nil
 }
-
-var Config ConfigStruct
-var Secrets SecretsStruct
-
-type ConfigStruct struct { //TODO populate defaults, and create config/secret struct
-	SqlConfig SQLConfig
-}
-
-type SQLConfig struct {
-	Nodes string
-}
-
-type SecretsStruct struct {
-	SqlSecrets SQLSecrets
-}
-
-type SQLSecrets struct {
-	Username string
-	Password string
-}
-
-var defaultConfig = ConfigStruct{}
-
-var defaultSecrets = SecretsStruct{}
 
 //Gets the configuration from a file name or creates
 //a new config file if one doesn't already exist
@@ -80,7 +96,7 @@ func getConfig(configFileName string, configPointer interface{}) error {
 			return errors.WithStack(err)
 		}
 
-		return nil
+		return errors.New("Configuration file not set")
 	}
 }
 
