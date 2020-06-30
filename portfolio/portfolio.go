@@ -8,14 +8,16 @@ import (
 	"github.com/justinas/alice"
 )
 
-func Run(m *mux.Router) error {
+//Run Serves a personal portfolio website
+//for showcasing the projects I've created
+func Run(m *mux.Router) {
 	mux := m.Host("portfolio.christianhering.com").Subrouter()
 
 	middlewares := alice.New(middleware.ErrorHandler, middleware.StatisticsHandler)
 
 	mux.Handle("/", middlewares.ThenFunc(myHandler))
 
-	return nil
+	return
 }
 
 func myHandler(w http.ResponseWriter, r *http.Request) {

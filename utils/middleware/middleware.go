@@ -53,3 +53,11 @@ func StatisticsHandler(next http.Handler) http.Handler {
 		utils.LogPageLatency(time.Since(start), r.Host, r.URL.String())
 	})
 }
+
+//Sets cache control header for all requests
+func CacheControlHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", fmt.Sprintf("public, must-revalidate, proxy-revalidate, max-age="+utils.Config.MaxCacheAge))
+		next.ServeHTTP(w, r)
+	})
+}

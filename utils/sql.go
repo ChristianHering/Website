@@ -15,7 +15,7 @@ var session *gocql.Session
 func setupSQL(channel chan error) {
 	var err error
 
-	cluster := gocql.NewCluster(Config.SqlConfig.Nodes)
+	cluster := gocql.NewCluster(Config.SQLConf.Nodes)
 	cluster.Keyspace = "website"
 	cluster.Consistency = gocql.Quorum
 	session, err = cluster.CreateSession()
@@ -63,7 +63,7 @@ func setupSQL(channel chan error) {
 	<-make(chan struct{})
 }
 
-//Logs an error to the errors table for later analysis
+//LogError Logs an error to the errors table for later analysis
 func LogError(e string, host string, url string) {
 	err := session.Query(`INSERT INTO errors (id, error, host, url) VALUES (?, ?, ?, ?)`,
 		gocql.TimeUUID(), e, host, url).Exec()
@@ -79,8 +79,8 @@ var pageLatencyCount map[string]int = make(map[string]int)
 var siteAdverageLatency map[string]float64 = make(map[string]float64)
 var siteLatencyCount map[string]int = make(map[string]int)
 
-//Calculates the average latency for a request's page
-//and site, then stores the results in a hashmap
+//LogPageLatency Calculates the average latency for a
+//request's page and site, then stores the results in a hashmap
 func LogPageLatency(latency time.Duration, host string, url string) {
 	count := siteLatencyCount[host] //Latency statistics for a request's subdomain
 	siteAdverageLatency[host] = (siteAdverageLatency[host]*float64(count) + latency.Seconds()) / float64(count+1)

@@ -8,14 +8,16 @@ import (
 	"github.com/justinas/alice"
 )
 
-func Run(m *mux.Router) error {
+//Run Serves a website for public
+//(and private) API documentation
+func Run(m *mux.Router) {
 	mux := m.Host("docs.christianhering.com").Subrouter()
 
 	middlewares := alice.New(middleware.ErrorHandler, middleware.StatisticsHandler)
 
 	mux.Handle("/", middlewares.ThenFunc(myHandler))
 
-	return nil
+	return
 }
 
 func myHandler(w http.ResponseWriter, r *http.Request) {

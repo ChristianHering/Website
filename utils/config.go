@@ -9,37 +9,43 @@ import (
 	"github.com/pkg/errors"
 )
 
+//Config global configuration var
 var Config ConfigStruct
+
+//Secrets global secrets var
 var Secrets SecretsStruct
 
-//Main Configuration Struct
-
+//ConfigStruct Main Configuration Struct
 type ConfigStruct struct { //TODO populate defaults, and create config/secret struct
-	SqlConfig  SQLConfig
-	AuthConfig AuthenticationConfig
+	SQLConf     SQLConfig
+	AuthConfig  AuthenticationConfig
+	MaxCacheAge string //Cache Control setting in seconds
 }
 
+//SQLConfig Configuration struct for SQL
 type SQLConfig struct {
 	Nodes string
 }
 
+//AuthenticationConfig Configuration struct for Auth0
 type AuthenticationConfig struct {
 	Auth0Domain   string //OpenID Provider URL
 	Auth0ClientID string
 }
 
-//Main Secrets Struct
-
+//SecretsStruct Main Secrets Struct
 type SecretsStruct struct {
-	SqlSecrets  SQLSecrets
+	SQLSecret   SQLSecrets
 	AuthSecrets AuthenticationSecrets
 }
 
+//SQLSecrets Secrets struct for SQL
 type SQLSecrets struct {
 	Username string
 	Password string
 }
 
+//AuthenticationSecrets Secrets struct for Auth0
 type AuthenticationSecrets struct {
 	CookieStoreKeys   [][]byte
 	Auth0ClientSecret string
@@ -83,21 +89,22 @@ func getConfig(configFileName string, configPointer interface{}) error {
 		}
 
 		return nil
-	} else { //If configFileName doesn't exist, create a new config file
-		b, err := json.MarshalIndent(configPointer, "", " ")
-		if err != nil {
-			fmt.Println("Failed to marshal configuration file")
-			return errors.WithStack(err)
-		}
-
-		err = ioutil.WriteFile(configFileName, b, 0644)
-		if err != nil {
-			fmt.Println("Failed to write configuration file")
-			return errors.WithStack(err)
-		}
-
-		return errors.New("Configuration file not set")
 	}
+
+	//If configFileName doesn't exist, create a new config file
+	b, err := json.MarshalIndent(configPointer, "", " ")
+	if err != nil {
+		fmt.Println("Failed to marshal configuration file")
+		return errors.WithStack(err)
+	}
+
+	err = ioutil.WriteFile(configFileName, b, 0644)
+	if err != nil {
+		fmt.Println("Failed to write configuration file")
+		return errors.WithStack(err)
+	}
+
+	return errors.New("Configuration file not set")
 }
 
 //Check to see if a file exists by name. Return bool

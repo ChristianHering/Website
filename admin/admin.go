@@ -10,7 +10,9 @@ import (
 	"github.com/justinas/alice"
 )
 
-func Run(m *mux.Router) error {
+//Run Serves an administrative panel for viewing
+//stats and managing content on the admin subdomain
+func Run(m *mux.Router) {
 	mux := m.Host("admin.christianhering.com").Subrouter()
 
 	//Non-Authenticated Handlers
@@ -29,7 +31,7 @@ func Run(m *mux.Router) error {
 
 	mux.Handle("/dashboard", middlewaresWithAuth.ThenFunc(dashboardHandler))
 
-	return nil
+	return
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {

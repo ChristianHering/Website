@@ -16,8 +16,10 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+//SessionStore Session cookie store
 var SessionStore *sessions.FilesystemStore
 
+//Authenticator Auth0 default authenticator struct
 type Authenticator struct {
 	Provider *oidc.Provider
 	Config   oauth2.Config
@@ -32,8 +34,8 @@ func setupAuth() {
 	return
 }
 
-//Instantiates a new OpenID/OAuth client,
-//then returns an authenticator struct
+//NewAuthenticator Instantiates a new OpenID/OAuth
+//client, then returns an authenticator struct
 func NewAuthenticator(requestHost string) (*Authenticator, error) {
 	ctx := context.Background()
 
@@ -45,7 +47,7 @@ func NewAuthenticator(requestHost string) (*Authenticator, error) {
 	conf := oauth2.Config{
 		ClientID:     Config.AuthConfig.Auth0ClientID,
 		ClientSecret: Secrets.AuthSecrets.Auth0ClientSecret,
-		RedirectURL:  "http://" + requestHost + "/callback",
+		RedirectURL:  "https://" + requestHost + "/callback",
 		Endpoint:     provider.Endpoint(),
 		Scopes:       []string{oidc.ScopeOpenID, "profile"},
 	}
@@ -57,8 +59,8 @@ func NewAuthenticator(requestHost string) (*Authenticator, error) {
 	}, nil
 }
 
-//Sets up a new OAuth/OpenID client, then redirects our user to
-//Auth0 for authentication. User sent back via CallbackHandler()
+//LoginHandler Sets up a new OAuth/OpenID client, then redirects our user
+//to Auth0 for authentication. User sent back via CallbackHandler()
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	b := make([]byte, 32)
 	_, err := rand.Read(b) //Generate random state
@@ -89,39 +91,32 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, authenticator.Config.AuthCodeURL(state), http.StatusTemporaryRedirect)
 }
 
-//Removes a user's login token, and clears their
-//session stored locally to fully log the user out
+//LogoutHandler Removes a user's login token, and clears
+//their session stored locally to fully log the user out
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	logoutUrl, err := url.Parse("https://" + Config.AuthConfig.Auth0Domain)
+	logoutURL, err := url.Parse("https://" + Config.AuthConfig.Auth0Domain)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		panic(errors.WithStack(err))
 	}
 
-	logoutUrl.Path += "/v2/logout"
+	logoutURL.Path += "/v2/logout"
 	parameters := url.Values{}
 
-	var scheme string
-	if r.TLS == nil {
-		scheme = "http"
-	} else {
-		scheme = "https"
-	}
-
-	returnTo, err := url.Parse(scheme + "://" + r.Host)
+	returnTo, err := url.Parse("https://" + r.Host)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		panic(errors.WithStack(err))
 	}
 	parameters.Add("returnTo", returnTo.String())
 	parameters.Add("client_id", Config.AuthConfig.Auth0ClientID)
-	logoutUrl.RawQuery = parameters.Encode()
+	logoutURL.RawQuery = parameters.Encode()
 
-	http.Redirect(w, r, logoutUrl.String(), http.StatusTemporaryRedirect)
+	http.Redirect(w, r, logoutURL.String(), http.StatusTemporaryRedirect)
 }
 
-//This is where users are directed after authentication on Auth0
+//CallbackHandler This is where users are directed after authentication on Auth0
 //
 //Call this with stanard middleware, then use our
 //authentication handler to protect other handlers
