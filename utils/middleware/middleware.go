@@ -3,7 +3,6 @@ package middleware
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/ChristianHering/Website/utils"
 	"github.com/pkg/errors"
@@ -40,17 +39,6 @@ func AuthenticationHandler(next http.Handler) http.Handler {
 		} else {
 			next.ServeHTTP(w, r)
 		}
-	})
-}
-
-//Sends per page view latency data to our statistics handler
-func StatisticsHandler(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
-
-		next.ServeHTTP(w, r)
-
-		utils.LogPageLatency(time.Since(start), r.Host, r.URL.String())
 	})
 }
 

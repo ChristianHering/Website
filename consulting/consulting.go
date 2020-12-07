@@ -13,7 +13,7 @@ import (
 func Run(m *mux.Router) {
 	mux := m.Host("christianhering.com").Subrouter()
 
-	middlewares := alice.New(middleware.ErrorHandler, middleware.StatisticsHandler)
+	middlewares := alice.New(middleware.ErrorHandler)
 
 	mux.Handle("/", middlewares.ThenFunc(indexHandler))
 

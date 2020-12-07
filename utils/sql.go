@@ -1,92 +1,36 @@
 package utils
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"time"
 
-	"github.com/gocql/gocql"
+	_ "github.com/go-sql-driver/mysql" //SQL Driver for MySQL/MariaDB
 	"github.com/pkg/errors"
 )
 
-var session *gocql.Session
+var connection *sql.DB
 
-//Connects to our cassandra cluster
+//Connects to our mysql db
 func setupSQL(channel chan error) {
 	var err error
 
-	cluster := gocql.NewCluster(Config.SQLConf.Nodes)
-	cluster.Keyspace = "website"
-	cluster.Consistency = gocql.Quorum
-	session, err = cluster.CreateSession()
+	connection, err = sql.Open("mysql", Config.SQLConf.Username+":"+Config.SQLConf.Password+"@tcp("+Config.SQLConf.Host+")/"+Config.SQLConf.Database+"?parseTime=true")
 	if err != nil {
 		channel <- errors.WithStack(err)
 	}
-	defer session.Close()
-	/*
-		err = session.Query(`INSERT INTO errors (id, error, host, url) VALUES (?, ?, ?, ?)`, //CREATE
-			gocql.TimeUUID(), err, host, url).Exec()
-		if err != nil {
-			panic(fmt.Sprintf("%+v", errors.WithStack(err)))
-		}
+	defer connection.Close()
 
-		var id string
-		var e string
-
-		iter := session.Query(`SELECT id, error FROM errors WHERE host = ?`, "param1").Iter() //READ
-		for iter.Scan(&id, &e) {
-			fmt.Println("Tweet:", id, e)
-
-			err = session.Query(`UPDATE errors SET error = ?, host = ? WHERE id = ?`, //UPDATE
-				"error! I fucked up...", "just param1", id).Exec()
-			if err != nil {
-				panic(fmt.Sprintf("%+v", errors.WithStack(err)))
-			}
-
-		}
-		if err := iter.Close(); err != nil {
-			panic(fmt.Sprintf("%+v", errors.WithStack(err)))
-		}
-
-		iter = session.Query(`SELECT id FROM errors WHERE host = ?`, "just param1").Iter()
-		for iter.Scan(&id) {
-			err = session.Query(`DELETE FROM errors WHERE id = ? IF EXISTS`, id).Exec() //DELETE
-			if err != nil {
-				panic(fmt.Sprintf("%+v", errors.WithStack(err)))
-			}
-		}
-		if err := iter.Close(); err != nil {
-			panic(fmt.Sprintf("%+v", errors.WithStack(err)))
-		}
-	*/
 	channel <- nil
 	<-make(chan struct{})
 }
 
 //LogError Logs an error to the errors table for later analysis
 func LogError(e string, host string, url string) {
-	err := session.Query(`INSERT INTO errors (id, error, host, url) VALUES (?, ?, ?, ?)`,
-		gocql.TimeUUID(), e, host, url).Exec()
+	_, err := connection.Query(`INSERT INTO errors (date, error, host, url) VALUES (?, ?, ?, ?);`, time.Now(), e, host, url)
 	if err != nil {
 		log.Println("Failed to log the following error to errors DB", err)
 		log.Println("Error encountered: ", fmt.Sprintf("%+v", errors.WithStack(err)))
 	}
-}
-
-var pageAdverageLatency map[string]float64 = make(map[string]float64)
-var pageLatencyCount map[string]int = make(map[string]int)
-
-var siteAdverageLatency map[string]float64 = make(map[string]float64)
-var siteLatencyCount map[string]int = make(map[string]int)
-
-//LogPageLatency Calculates the average latency for a
-//request's page and site, then stores the results in a hashmap
-func LogPageLatency(latency time.Duration, host string, url string) {
-	count := siteLatencyCount[host] //Latency statistics for a request's subdomain
-	siteAdverageLatency[host] = (siteAdverageLatency[host]*float64(count) + latency.Seconds()) / float64(count+1)
-	siteLatencyCount[host] = count + 1
-
-	count = pageLatencyCount[host+url] //Latency statistics for a request's page
-	pageAdverageLatency[host+url] = (pageAdverageLatency[host+url]*float64(count) + latency.Seconds()) / float64(count+1)
-	pageLatencyCount[host+url] = count + 1
 }

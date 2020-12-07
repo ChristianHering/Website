@@ -17,7 +17,7 @@ func Run(m *mux.Router) {
 
 	//Non-Authenticated Handlers
 
-	middlewares := alice.New(middleware.ErrorHandler, middleware.StatisticsHandler)
+	middlewares := alice.New(middleware.ErrorHandler)
 
 	mux.Handle("/", middlewares.ThenFunc(indexHandler))
 
@@ -27,7 +27,7 @@ func Run(m *mux.Router) {
 
 	//Authenticated Handlers
 
-	middlewaresWithAuth := alice.New(middleware.ErrorHandler, middleware.AuthenticationHandler, middleware.StatisticsHandler)
+	middlewaresWithAuth := alice.New(middleware.ErrorHandler, middleware.AuthenticationHandler)
 
 	mux.Handle("/dashboard", middlewaresWithAuth.ThenFunc(dashboardHandler))
 

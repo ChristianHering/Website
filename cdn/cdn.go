@@ -18,7 +18,7 @@ import (
 func Run(m *mux.Router) {
 	mux := m.Host("cdn.christianhering.com").Subrouter()
 
-	middlewares := alice.New(middleware.ErrorHandler, middleware.CacheControlHandler, middleware.StatisticsHandler)
+	middlewares := alice.New(middleware.ErrorHandler, middleware.CacheControlHandler)
 
 	mux.PathPrefix("/css/").Handler(middlewares.Then(http.StripPrefix("/css/", http.FileServer(http.Dir("./cdn/css")))))
 	mux.PathPrefix("/img/").Handler(middlewares.Then(http.StripPrefix("/img/", http.FileServer(http.Dir("./cdn/img")))))
