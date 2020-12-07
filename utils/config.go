@@ -12,9 +12,6 @@ import (
 //Config global configuration var
 var Config ConfigStruct
 
-//Secrets global secrets var
-var Secrets SecretsStruct
-
 //ConfigStruct Main Configuration Struct
 type ConfigStruct struct { //TODO populate defaults, and create config/secret struct
 	SQLConf     SQLConfig
@@ -24,46 +21,23 @@ type ConfigStruct struct { //TODO populate defaults, and create config/secret st
 
 //SQLConfig Configuration struct for SQL
 type SQLConfig struct {
-	Nodes string
+	Host     string
+	Username string
+	Password string
+	Database string
 }
 
 //AuthenticationConfig Configuration struct for Auth0
 type AuthenticationConfig struct {
-	Auth0Domain   string //OpenID Provider URL
-	Auth0ClientID string
-}
-
-//SecretsStruct Main Secrets Struct
-type SecretsStruct struct {
-	SQLSecret   SQLSecrets
-	AuthSecrets AuthenticationSecrets
-}
-
-//SQLSecrets Secrets struct for SQL
-type SQLSecrets struct {
-	Username string
-	Password string
-}
-
-//AuthenticationSecrets Secrets struct for Auth0
-type AuthenticationSecrets struct {
+	Auth0Domain       string //OpenID Provider URL
+	Auth0ClientID     string
 	CookieStoreKeys   [][]byte
 	Auth0ClientSecret string
 }
 
-var defaultConfig = ConfigStruct{}
-
-var defaultSecrets = SecretsStruct{}
-
 func setupConfig() error {
-	Config = defaultConfig
+	Config = ConfigStruct{}
 	err := getConfig("config.json", &Config)
-	if err != nil {
-		return err
-	}
-
-	Secrets = defaultSecrets
-	err = getConfig("secrets.json", &Secrets)
 	if err != nil {
 		return err
 	}

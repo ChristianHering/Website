@@ -21,7 +21,14 @@ func Run(m *mux.Router) {
 	middlewares := alice.New(middleware.ErrorHandler, middleware.CacheControlHandler, middleware.StatisticsHandler)
 
 	mux.PathPrefix("/css/").Handler(middlewares.Then(http.StripPrefix("/css/", http.FileServer(http.Dir("./cdn/css")))))
+	mux.PathPrefix("/img/").Handler(middlewares.Then(http.StripPrefix("/img/", http.FileServer(http.Dir("./cdn/img")))))
 	mux.PathPrefix("/js/").Handler(middlewares.Then(http.StripPrefix("/js/", http.FileServer(http.Dir("./cdn/js")))))
 
+	mux.Handle("/", middlewares.ThenFunc(indexHandler))
+
 	return
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "https://ChristianHering.com/", http.StatusSeeOther)
 }

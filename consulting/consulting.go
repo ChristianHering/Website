@@ -1,10 +1,10 @@
 package consulting
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/ChristianHering/Website/utils/middleware"
+	"github.com/ChristianHering/Website/utils/templates"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
 )
@@ -15,12 +15,14 @@ func Run(m *mux.Router) {
 
 	middlewares := alice.New(middleware.ErrorHandler, middleware.StatisticsHandler)
 
-	mux.Handle("/", middlewares.ThenFunc(myHandler))
+	mux.Handle("/", middlewares.ThenFunc(indexHandler))
 
 	return
 }
 
-func myHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello!!!")
-	fmt.Println("hi")
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	err := templates.Templates.ExecuteTemplate(w, "index.html", nil)
+	if err != nil {
+		panic(err)
+	}
 }

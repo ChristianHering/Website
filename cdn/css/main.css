@@ -1,0 +1,288 @@
+/*
+ * General
+*/
+
+body, html {
+    height: 100%;
+    background-color: #1f1f1f;
+}
+
+.fullscreen-ch {
+    height: 100vh;
+    width: 100%;
+}
+
+.body-grid-ch {
+    color: white;
+    text-align: center;
+    justify-content: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    margin: 0px;
+}
+
+/*
+ * Navigation
+*/
+
+.nav-ch {
+    background: linear-gradient(to right, rgba(31, 31, 31, 0), rgba(31, 31, 31, 1));
+}
+
+.nav-ch a {
+    padding: 5px 10px 15px 15px;
+    color: #fff;
+    text-shadow: 2px 3px 5px rgba(0,0,0,0.5);
+    font-size: 50x;
+    text-decoration: none;
+}
+
+.nav-ch i {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.nav-ch button {
+    border: 0px;
+    background: transparent;
+}
+
+/*
+ * Landing
+*/
+
+.fullscreen-ch.landing-background-div-ch {
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('https://cdn.ChristianHering.com/img/bg.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+}
+
+.landing-div-ch {
+    padding-top: 40vh;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.landing-div-ch h1 {
+    color: white;
+    font-size: 5em;
+    text-shadow: 2px 3px 5px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 1200px) {
+    .landing-div-ch h1 {
+        font-size: 4em;
+        line-height: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .landing-div-ch h1 {
+        font-size: 3em;
+        line-height: 36px;
+    }
+}
+
+.landing-div-ch p {
+    color: white;
+    font-size: 2em;
+    text-shadow: 2px 3px 5px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 1200px) {
+    .landing-div-ch p {
+        font-size: 1.5em;
+        line-height: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .landing-div-ch p {
+        font-size: 1.2em;
+        line-height: 36px;
+    }
+}
+
+.landing-icon-ch {
+    color: white;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .landing-icon-ch svg {
+        width: 4vw;
+        height: 4vw;
+    }
+}
+
+/*
+ * Projects && Services
+*/
+
+.card-ch {
+    background: transparent;
+    border: 0px;
+    word-wrap: normal;
+    border-radius: 0%;
+}
+
+.card-ch h2 {
+    color: white;
+}
+
+.card-ch p {
+    color: white;
+    font-size: 15px;
+}
+
+/*
+ * Blog Posts
+*/
+
+.blog-ch {
+    word-wrap: normal;
+    border-radius: 5px;
+    border: 0px;
+}
+
+.blog-ch h2 {
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+    text-shadow: 2px 3px 5px rgba(0,0,0,0.5);
+}
+
+.blog-ch p {
+    color: white;
+    font-size: 18px;
+    font-family: 'Times New Roman', Times, serif;
+    text-shadow: 2px 3px 5px rgba(0,0,0,0.5);
+}
+
+/*
+ * Contact
+*/
+
+.contact-ch {
+    color: white;
+    background-color: rgba(128, 128, 128, 0.1);
+}
+
+.contact-ch h4 {
+    color: white;
+    text-align: left;
+}
+
+.contact-ch h6 {
+    color: white;
+    text-align: left;
+}
+
+.contact-ch p {
+    color: rgba(255, 255, 255, 0.5);
+    text-align: left;
+    line-height: 1em;
+}
+
+.contact-ch input {
+    width: 100%;
+    border: 0;
+    height: 3em;
+    outline: none;
+    font-size: 1em;
+    line-height: 3em;
+    margin-bottom: 1em;
+    background: transparent;
+    color: rgb(255, 255, 255);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/*
+ * Footer
+*/
+
+.footer-ch {
+    background-color: #272727;
+}
+
+.footer-ch div {
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    justify-content: center;
+}
+
+.footer-ch h1 {
+    color: white;
+    text-shadow: 2px 3px 50px rgba(0,0,0,0.5);
+    font-size: 25px;
+    text-align: center;
+}
+
+.footer-ch h2 {
+    color: rgba(255, 255, 255, 0.5);
+    text-shadow: 2px 3px 50px rgba(0,0,0,0.5);
+    font-size: 15px;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.footer-ch p {
+    color: white;
+    text-shadow: 2px 3px 50px rgba(0,0,0,0.5);
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.footer-ch i {
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0.25em;
+}
+
+.footer-ch ul {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.footer-ch li {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.footer-ch a {
+    color: rgb(153, 153, 153);
+    text-shadow: 2px 3px 50px rgba(0,0,0,0.5);
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.footer-ch input {
+    border: 0px;
+    height: 3em;
+    outline: none;
+    font-size: 1em;
+    line-height: 3em;
+    background: transparent;
+    color: rgb(255, 255, 255);
+    border-bottom:  1px solid rgba(255, 255, 255, 0.1);
+}
+
+/*
+ * Copyright
+*/
+
+.copyright-ch {
+    background-color: #1f1f1f;
+}
+
+.copyright-ch p {
+    color: rgb(82, 82, 82);
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

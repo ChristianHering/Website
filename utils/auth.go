@@ -29,7 +29,7 @@ type Authenticator struct {
 //Creates a filesystem session store
 //for user request authentication
 func setupAuth() {
-	SessionStore = sessions.NewFilesystemStore("", Secrets.AuthSecrets.CookieStoreKeys...)
+	SessionStore = sessions.NewFilesystemStore("", Config.AuthConfig.CookieStoreKeys...)
 	gob.Register(map[string]interface{}{})
 	return
 }
@@ -46,7 +46,7 @@ func NewAuthenticator(requestHost string) (*Authenticator, error) {
 
 	conf := oauth2.Config{
 		ClientID:     Config.AuthConfig.Auth0ClientID,
-		ClientSecret: Secrets.AuthSecrets.Auth0ClientSecret,
+		ClientSecret: Config.AuthConfig.Auth0ClientSecret,
 		RedirectURL:  "https://" + requestHost + "/callback",
 		Endpoint:     provider.Endpoint(),
 		Scopes:       []string{oidc.ScopeOpenID, "profile"},
