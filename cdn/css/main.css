@@ -51,7 +51,7 @@ body, html {
 */
 
 .fullscreen-ch.landing-background-div-ch {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('https://cdn.ChristianHering.com/img/bg.jpg');
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/bg.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
