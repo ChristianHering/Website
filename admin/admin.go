@@ -6,6 +6,7 @@ import (
 
 	"github.com/ChristianHering/Website/utils"
 	"github.com/ChristianHering/Website/utils/middleware"
+	"github.com/ChristianHering/Website/utils/templates"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
 )
@@ -39,5 +40,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func dashboardHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi!")
+	err := templates.Templates.ExecuteTemplate(w, "adminDashboard.html", nil)
+	if err != nil {
+		panic(err)
+	}
 }

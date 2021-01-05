@@ -29,7 +29,7 @@ type Authenticator struct {
 //Creates a filesystem session store
 //for user request authentication
 func setupAuth() {
-	SessionStore = sessions.NewFilesystemStore("", Config.AuthConfig.CookieStoreKeys...)
+	SessionStore = sessions.NewFilesystemStore("", Config.AuthenticationConfig.CookieStoreKeys...)
 	gob.Register(map[string]interface{}{})
 	return
 }
@@ -39,14 +39,14 @@ func setupAuth() {
 func NewAuthenticator(requestHost string) (*Authenticator, error) {
 	ctx := context.Background()
 
-	provider, err := oidc.NewProvider(ctx, "https://"+Config.AuthConfig.Auth0Domain+"/")
+	provider, err := oidc.NewProvider(ctx, "https://"+Config.AuthenticationConfig.Auth0Domain+"/")
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
 	conf := oauth2.Config{
-		ClientID:     Config.AuthConfig.Auth0ClientID,
-		ClientSecret: Config.AuthConfig.Auth0ClientSecret,
+		ClientID:     Config.AuthenticationConfig.Auth0ClientID,
+		ClientSecret: Config.AuthenticationConfig.Auth0ClientSecret,
 		RedirectURL:  "https://" + requestHost + "/callback",
 		Endpoint:     provider.Endpoint(),
 		Scopes:       []string{oidc.ScopeOpenID, "profile"},
@@ -94,7 +94,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 //LogoutHandler Removes a user's login token, and clears
 //their session stored locally to fully log the user out
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	logoutURL, err := url.Parse("https://" + Config.AuthConfig.Auth0Domain)
+	logoutURL, err := url.Parse("https://" + Config.AuthenticationConfig.Auth0Domain)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -110,7 +110,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		panic(errors.WithStack(err))
 	}
 	parameters.Add("returnTo", returnTo.String())
-	parameters.Add("client_id", Config.AuthConfig.Auth0ClientID)
+	parameters.Add("client_id", Config.AuthenticationConfig.Auth0ClientID)
 	logoutURL.RawQuery = parameters.Encode()
 
 	http.Redirect(w, r, logoutURL.String(), http.StatusTemporaryRedirect)
@@ -118,7 +118,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 //CallbackHandler This is where users are directed after authentication on Auth0
 //
-//Call this with stanard middleware, then use our
+//Call this with standard middleware, then use our
 //authentication handler to protect other handlers
 func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	session, err := SessionStore.Get(r, "auth-session")
@@ -151,7 +151,7 @@ func CallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	oidcConfig := &oidc.Config{
-		ClientID: Config.AuthConfig.Auth0ClientID,
+		ClientID: Config.AuthenticationConfig.Auth0ClientID,
 	}
 
 	idToken, err := authenticator.Provider.Verifier(oidcConfig).Verify(context.TODO(), rawIDToken)

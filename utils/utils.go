@@ -18,7 +18,10 @@ func RunUtilSetup() error {
 		return err
 	}
 
-	templates.Run()
+	err = templates.Run()
+	if err != nil {
+		return err
+	}
 
 	setupAuth()
 

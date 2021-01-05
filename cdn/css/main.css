@@ -50,15 +50,6 @@ body, html {
  * Landing
 */
 
-.fullscreen-ch.landing-background-div-ch {
-    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/bg.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    height: 100vh;
-    width: 100%;
-}
-
 .landing-div-ch {
     padding-top: 40vh;
     text-align: center;
@@ -285,4 +276,51 @@ body, html {
     text-align: center;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+/*
+ * Resume
+*/
+
+.resume-ch {
+    background-color: #1E1E1E;
+}
+
+.resume-ch pre {
+    font-size: 17px;
+    line-height: 1.5;
+    text-align: left;
+}
+
+.resume-ch .text-ch {
+    color: white;
+}
+
+.resume-ch .blue-ch {
+    color: #569CD6;
+}
+
+.resume-ch .linenumber-ch {
+    color: #D0D0D0;
+}
+
+.resume-ch .key-ch {
+    color: #9CDCFE;
+}
+
+.resume-ch .bracket-ch {
+    color: #D197D9;
+}
+
+.resume-ch .string-ch {
+    color: #CE9178;
+}
+
+.resume-ch .number-ch {
+    color: #7FB347;
+}
+
+.post-ch {
+    white-space: pre-wrap;
+    font-size: 18px;
 }

@@ -1,0 +1,46 @@
+{{template "header" .}}
+    <title>Christian Hering - {{.Post.Title}}</title>
+
+            <div class="row body-grid-ch" style="background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));">
+                <div class="col-2"></div>
+                    <div class="col-xs-12 col-sm-8">
+    
+                        <div class="py-3"></div>
+                        <!-- Blog Post -->
+
+                        {{.Post.Image}}
+
+                        <h1>{{.Post.Title}}</h1>
+
+                        <div class="">Date: {{.Post.Date}} - Tags: {{.Post.Tags}}</div>
+                        
+                        <div class="post-ch">{{htmlSafe .Post.Body}}</div>
+
+                        <!-- Blog Post -->
+                        <div class="py-5"></div>
+                        <!-- Projects -->
+    
+                        <h1>Other Blog Posts</h1>
+                        <p>Enjoyed the read? Try reading another article.</p>
+                        <div class="row">
+                            <div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{if .LastPost.Image}}{{.LastPost.Image}}{{else}}defaultImage.jpg{{end}}'); background-size: cover;">
+                                <div class="card-body my-3">
+                                    <h2 class="mx-auto">{{if .LastPost.Title}}{{.LastPost.Title}}{{else}}Nothing To See Here...{{end}}</h2>
+                                    <p>{{if .LastPost.BodyShowcase}}{{.LastPost.BodyShowcase}} ... <a href="http://blog.ChristianHering.com/post/{{.LastPost.ID}}">Read More</a>{{else}}There are no posts before this.{{end}}</p>
+                                </div>
+                            </div>
+                            <div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{if .NextPost.Image}}{{.NextPost.Image}}{{else}}defaultImage.jpg{{end}}'); background-size: cover;">
+                                <div class="card-body my-3">
+                                    <h2 class="mx-auto">{{if .NextPost.Title}}{{.NextPost.Title}}{{else}}Coming Soon...{{end}}</h2>
+                                    <p>{{if .NextPost.BodyShowcase}}{{.NextPost.BodyShowcase}} ... <a href="http://blog.ChristianHering.com/post/{{.NextPost.ID}}">Read More</a>{{else}}There are no posts after this.{{end}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Projects -->
+                        <div class="py-5"></div>
+    
+                    </div>
+                <div class="col-2"></div>
+            </div>
+    {{template "footer" .}}

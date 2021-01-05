@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ChristianHering/Website/utils/middleware"
+	"github.com/ChristianHering/Website/utils/templates"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
 )
@@ -15,10 +16,15 @@ func Run(m *mux.Router) {
 
 	middlewares := alice.New(middleware.ErrorHandler)
 
-	mux.Handle("/", middlewares.ThenFunc(myHandler))
+	mux.Handle("/", middlewares.ThenFunc(indexHandler))
 
 	return
 }
 
-func myHandler(w http.ResponseWriter, r *http.Request) {
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	err := templates.Templates.ExecuteTemplate(w, "portfolioIndex.html", nil)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(err)
+	}
 }

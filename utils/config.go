@@ -14,25 +14,34 @@ var Config ConfigStruct
 
 //ConfigStruct Main Configuration Struct
 type ConfigStruct struct { //TODO populate defaults, and create config/secret struct
-	SQLConf     SQLConfig
-	AuthConfig  AuthenticationConfig
-	MaxCacheAge string //Cache Control setting in seconds
+	SQLConfig            SQLConf
+	AuthenticationConfig AuthenticationConf
+	EmailConfig          EmailConf
+	MaxCacheAge          string //Cache Control setting in seconds
 }
 
-//SQLConfig Configuration struct for SQL
-type SQLConfig struct {
+//SQLConf Configuration struct for SQL
+type SQLConf struct {
 	Host     string
 	Username string
 	Password string
 	Database string
 }
 
-//AuthenticationConfig Configuration struct for Auth0
-type AuthenticationConfig struct {
+//AuthenticationConf Configuration struct for Auth0
+type AuthenticationConf struct {
 	Auth0Domain       string //OpenID Provider URL
 	Auth0ClientID     string
 	CookieStoreKeys   [][]byte
 	Auth0ClientSecret string
+}
+
+//EmailConf Stores SMTP authentication details
+type EmailConf struct {
+	Host     string
+	Port     int
+	Username string
+	Password string
 }
 
 func setupConfig() error {

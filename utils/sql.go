@@ -3,7 +3,6 @@ package utils
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql" //SQL Driver for MySQL/MariaDB
@@ -16,21 +15,50 @@ var connection *sql.DB
 func setupSQL(channel chan error) {
 	var err error
 
-	connection, err = sql.Open("mysql", Config.SQLConf.Username+":"+Config.SQLConf.Password+"@tcp("+Config.SQLConf.Host+")/"+Config.SQLConf.Database+"?parseTime=true")
+	connection, err = sql.Open("mysql", Config.SQLConfig.Username+":"+Config.SQLConfig.Password+"@tcp("+Config.SQLConfig.Host+")/"+Config.SQLConfig.Database+"?parseTime=true")
 	if err != nil {
 		channel <- errors.WithStack(err)
 	}
 	defer connection.Close()
 
+	go RowCountUpdater(60)
+
 	channel <- nil
 	<-make(chan struct{})
 }
 
-//LogError Logs an error to the errors table for later analysis
-func LogError(e string, host string, url string) {
-	_, err := connection.Query(`INSERT INTO errors (date, error, host, url) VALUES (?, ?, ?, ?);`, time.Now(), e, host, url)
-	if err != nil {
-		log.Println("Failed to log the following error to errors DB", err)
-		log.Println("Error encountered: ", fmt.Sprintf("%+v", errors.WithStack(err)))
+//RowCountUpdater asynchronously udpates row counts
+func RowCountUpdater(interval int) {
+	var err error
+
+	for {
+		BlogRowCount, err = GetTableSize("posts") //For GetPostRange()
+		if err != nil {
+			var e = Error{Date: time.Now(), Error: fmt.Sprintf("%+v", errors.WithStack(err)), Host: "", URL: ""}
+
+			e.Create()
+		}
+
+		time.Sleep(time.Duration(interval) * time.Second)
 	}
+}
+
+//GetTableSize returns the number of uuid's in a table
+func GetTableSize(table string) (length int, err error) {
+	r := connection.QueryRow(`SELECT COUNT(id) FROM ` + table + `;`)
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+
+	err = r.Scan(&length)
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+
+	err = r.Err()
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+
+	return length, nil
 }
