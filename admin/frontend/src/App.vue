@@ -1,30 +1,62 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+    <div id="app">
+        <div class="row body-grid-ch">
+            <div class="col-1"></div>
+
+            <div class="col-xs-12 col-sm-3">
+                <ul>
+                    <li><router-link to="/">Home</router-link></li>
+                    <li><router-link to="/errors">Errors</router-link></li>
+                </ul>
+            </div>
+                <div class="col-xs-12 col-sm-6">
+                    <router-view /> <!-- Where selected components are rendered -->
+                </div>
+
+            <div class="col-2"></div>
+        </div>
+    </div>
 </template>
 
+<style scoped>
+    ul {
+        list-style-type: none;
+        padding-left: 0px;
+    }
+
+    li {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    
+    a {
+        color: rgb(153, 153, 153);
+        text-shadow: 2px 3px 50px rgba(0,0,0,0.5);
+        font-size: 18px;
+    }
+</style>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+    body, html {
+        height: 100%;
+        background-color: #1f1f1f;
+    }
 
-#nav {
-  padding: 30px;
-}
+    .fullscreen-ch {
+        height: 100vh;
+        width: 100%;
+    }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+    .body-grid-ch {
+        color: white;
+        text-align: center;
+        justify-content: center;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        margin: 0px;
+    }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+    a {
+        text-decoration: none;
+    }
 </style>

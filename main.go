@@ -6,6 +6,7 @@ import (
 
 	"github.com/ChristianHering/Website/admin"
 	"github.com/ChristianHering/Website/blog"
+	"github.com/ChristianHering/Website/cdn"
 	"github.com/ChristianHering/Website/consulting"
 	"github.com/ChristianHering/Website/docs"
 	"github.com/ChristianHering/Website/portfolio"
@@ -22,7 +23,7 @@ func main() {
 
 	mux := mux.NewRouter()
 
-	//cdn.Run(mux) //static file serving for development. Replaced by jsDelivr
+	cdn.Run(mux) //static file serving for development. Replaced by jsDelivr
 
 	admin.Run(mux)      //admin subdomain
 	blog.Run(mux)       //blog subdomain

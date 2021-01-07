@@ -1,7 +1,9 @@
 package admin
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/ChristianHering/Website/utils"
@@ -32,6 +34,10 @@ func Run(m *mux.Router) {
 
 	mux.Handle("/dashboard", middlewaresWithAuth.ThenFunc(dashboardHandler))
 
+	mux.Handle("/error", middlewaresWithAuth.ThenFunc(errorHandler))
+	mux.Handle("/errorDelete", middlewaresWithAuth.ThenFunc(errorDeletionHandler))
+	mux.Handle("/errorDeleteType", middlewaresWithAuth.ThenFunc(errorTypeDeletionHandler))
+
 	return
 }
 
@@ -44,4 +50,64 @@ func dashboardHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func errorHandler(w http.ResponseWriter, r *http.Request) {
+	var e utils.Errors
+
+	err := e.Read("3")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(err)
+	}
+
+	json.NewEncoder(w).Encode(e)
+}
+
+func errorDeletionHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		panic(err)
+	}
+
+	var e utils.Error
+
+	err = json.Unmarshal(b, &e)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		panic(err)
+	}
+
+	err = e.Delete()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func errorTypeDeletionHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		panic(err)
+	}
+
+	var e utils.Error
+
+	err = json.Unmarshal(b, &e)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		panic(err)
+	}
+
+	err = e.DeleteErrorType()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
