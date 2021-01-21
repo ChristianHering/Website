@@ -2,7 +2,6 @@ package admin
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/ChristianHering/Website/utils/templates"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
+	"github.com/pkg/errors"
 )
 
 //Run Serves an administrative panel for viewing
@@ -38,17 +38,30 @@ func Run(m *mux.Router) {
 	mux.Handle("/errorDelete", middlewaresWithAuth.ThenFunc(errorDeletionHandler))
 	mux.Handle("/errorDeleteType", middlewaresWithAuth.ThenFunc(errorTypeDeletionHandler))
 
+	mux.Handle("/posts", middlewaresWithAuth.ThenFunc(postsHandler))
+	mux.Handle("/postCreate", middlewaresWithAuth.ThenFunc(postCreateHandler))
+	mux.Handle("/postUpdate", middlewaresWithAuth.ThenFunc(postUpdateHandler))
+	mux.Handle("/postDelete", middlewaresWithAuth.ThenFunc(postDeleteHandler))
+
+	mux.Handle("/stagedPosts", middlewaresWithAuth.ThenFunc(stagedPostsHandler))
+	mux.Handle("/stagedPostCreate", middlewaresWithAuth.ThenFunc(stagedPostCreateHandler))
+	mux.Handle("/stagedPostUpdate", middlewaresWithAuth.ThenFunc(stagedPostUpdateHandler))
+	mux.Handle("/stagedPostDelete", middlewaresWithAuth.ThenFunc(stagedPostDeleteHandler))
+
 	return
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome!")
+	err := templates.Templates.ExecuteTemplate(w, "adminIndex.html", nil)
+	if err != nil {
+		panic(errors.WithStack(err))
+	}
 }
 
 func dashboardHandler(w http.ResponseWriter, r *http.Request) {
 	err := templates.Templates.ExecuteTemplate(w, "adminDashboard.html", nil)
 	if err != nil {
-		panic(err)
+		panic(errors.WithStack(err))
 	}
 }
 
@@ -58,7 +71,7 @@ func errorHandler(w http.ResponseWriter, r *http.Request) {
 	err := e.Read("3")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		panic(err)
+		panic(errors.WithStack(err))
 	}
 
 	json.NewEncoder(w).Encode(e)
@@ -68,7 +81,7 @@ func errorDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		panic(err)
+		panic(errors.WithStack(err))
 	}
 
 	var e utils.Error
@@ -76,13 +89,13 @@ func errorDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(b, &e)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		panic(err)
+		panic(errors.WithStack(err))
 	}
 
 	err = e.Delete()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		panic(err)
+		panic(errors.WithStack(err))
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -92,7 +105,7 @@ func errorTypeDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		panic(err)
+		panic(errors.WithStack(err))
 	}
 
 	var e utils.Error
@@ -100,14 +113,170 @@ func errorTypeDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(b, &e)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		panic(err)
+		panic(errors.WithStack(err))
 	}
 
 	err = e.DeleteErrorType()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		panic(err)
+		panic(errors.WithStack(err))
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func postsHandler(w http.ResponseWriter, r *http.Request) {
+	var posts utils.Posts
+
+	err := posts.GetNewestPosts("6")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(errors.WithStack(err))
+	}
+
+	json.NewEncoder(w).Encode(posts)
+}
+
+func postCreateHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var post utils.Post
+
+	err = json.Unmarshal(b, &post)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = post.Create()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(errors.WithStack(err))
+	}
+}
+
+func postUpdateHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var post utils.Post
+
+	err = json.Unmarshal(b, &post)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = post.Update()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
+func postDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var post utils.Post
+
+	err = json.Unmarshal(b, &post)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = post.Delete()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
+func stagedPostsHandler(w http.ResponseWriter, r *http.Request) {
+	var posts utils.StagingPosts
+
+	err := posts.Read("6")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(errors.WithStack(err))
+	}
+
+	json.NewEncoder(w).Encode(posts)
+}
+
+func stagedPostCreateHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var stagedPost utils.StagingPost
+
+	err = json.Unmarshal(b, &stagedPost)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = stagedPost.Create()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(errors.WithStack(err))
+	}
+}
+
+func stagedPostUpdateHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var stagedPost utils.StagingPost
+
+	err = json.Unmarshal(b, &stagedPost)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = stagedPost.Update()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
+func stagedPostDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var stagedPost utils.StagingPost
+
+	err = json.Unmarshal(b, &stagedPost)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = stagedPost.Delete()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 }

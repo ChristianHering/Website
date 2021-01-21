@@ -33,7 +33,7 @@ type PostsData struct {
 	CurrentPage int
 }
 
-//PostsData is used for blog post handlers
+//PostData is used for blog post handlers
 type PostData struct {
 	LastPost Post
 	Post     Post
@@ -86,13 +86,13 @@ func (p *Post) Read() error {
 }
 
 //Update (Post) modifies a blog post entry
-func (p *Post) Update(e string, host string, url string) error {
+func (p *Post) Update() error {
 	b, err := json.Marshal(p.Tags)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
-	_, err = connection.Exec(`UPDATE INTO posts (id, date, tags, image, title, body) VALUES (?, ?, ?, ?, ?, ?);`, p.ID, time.Now().Format("2006-01-02 15:04:05.000000"), b, p.Image, p.Title, p.Body)
+	_, err = connection.Exec(`UPDATE posts SET tags = ?, image = ?, title = ?, body = ? WHERE id = ?;`, b, p.Image, p.Title, p.Body, p.ID)
 	if err != nil {
 		return errors.WithStack(err)
 	}

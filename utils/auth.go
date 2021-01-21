@@ -113,6 +113,20 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	parameters.Add("client_id", Config.AuthenticationConfig.Auth0ClientID)
 	logoutURL.RawQuery = parameters.Encode()
 
+	session, err := SessionStore.Get(r, "auth-session")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		panic(errors.WithStack(err))
+	}
+
+	session.Options.MaxAge = -1
+
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	http.Redirect(w, r, logoutURL.String(), http.StatusTemporaryRedirect)
 }
 

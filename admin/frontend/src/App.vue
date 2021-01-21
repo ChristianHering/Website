@@ -7,6 +7,9 @@
                 <ul>
                     <li><router-link to="/">Home</router-link></li>
                     <li><router-link to="/errors">Errors</router-link></li>
+                    <li><router-link to="/posts">Blog Posts</router-link></li>
+                    <li><router-link to="/postCreate">Create Blog Post</router-link></li>
+                    <li><a href="http://admin.ChristianHering.com/logout">Logout</a></li>
                 </ul>
             </div>
                 <div class="col-xs-12 col-sm-6">
