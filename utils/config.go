@@ -23,9 +23,10 @@ type ConfigStruct struct { //TODO populate defaults, and create config/secret st
 //SQLConf Configuration struct for SQL
 type SQLConf struct {
 	Host     string
+	Port     string
 	Username string
 	Password string
-	Database string
+	Schema   string
 }
 
 //AuthenticationConf Configuration struct for Auth0

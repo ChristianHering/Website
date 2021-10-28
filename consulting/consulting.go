@@ -19,8 +19,6 @@ func Run(m *mux.Router) {
 
 	mux.Handle("/", middlewares.ThenFunc(indexHandler))
 	mux.Handle("/contact", middlewares.ThenFunc(contactHandler))
-
-	return
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {

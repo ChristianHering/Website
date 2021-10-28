@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 
-	_ "github.com/go-sql-driver/mysql" //SQL Driver for MySQL/MariaDB
+	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 )
 

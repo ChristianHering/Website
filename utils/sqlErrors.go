@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql" //SQL Driver for MySQL/MariaDB
+	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 )
 
@@ -23,7 +23,7 @@ type Error struct {
 
 //Create (Err) Logs an error to the errors table
 func (e *Error) Create() {
-	_, err := connection.Exec(`INSERT INTO errors (date, error, host, url) VALUES (?, ?, ?, ?);`, time.Now().Format("2006-01-02 15:04:05.000000"), e.Error, e.Host, e.URL)
+	_, err := connection.Exec(`INSERT INTO errors (date, error, host, url) VALUES ($1, $2, $3, $4);`, time.Now().Format("2006-01-02 15:04:05.000000"), e.Error, e.Host, e.URL)
 	if err != nil {
 		log.Println("Failed to log the following error to errors DB", err)
 		log.Println("Error encountered: ", fmt.Sprintf("%+v", errors.WithStack(err)))
@@ -65,7 +65,7 @@ func (e *Errors) Read(limit string) error {
 
 //Delete (Err) Deletes an error in the error table
 func (e *Error) Delete() error {
-	_, err := connection.Exec(`DELETE FROM errors WHERE id = ?;`, e.ID)
+	_, err := connection.Exec(`DELETE FROM errors WHERE id = $1;`, e.ID)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -75,7 +75,7 @@ func (e *Error) Delete() error {
 
 //DeleteErrorType (Err) Deletes all instances of an error in the error table
 func (e *Error) DeleteErrorType() error {
-	_, err := connection.Exec(`DELETE FROM errors WHERE error = ?;`, e.Error)
+	_, err := connection.Exec(`DELETE FROM errors WHERE error = $1;`, e.Error)
 	if err != nil {
 		return errors.WithStack(err)
 	}

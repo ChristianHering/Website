@@ -26,13 +26,13 @@
                             <div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{if .LastPost.Image}}{{.LastPost.Image}}{{else}}defaultImage.jpg{{end}}'); background-size: cover;">
                                 <div class="card-body my-3">
                                     <h2 class="mx-auto">{{if .LastPost.Title}}{{.LastPost.Title}}{{else}}Nothing To See Here...{{end}}</h2>
-                                    <p>{{if .LastPost.BodyShowcase}}{{.LastPost.BodyShowcase}} ... <a href="http://blog.ChristianHering.com/post/{{.LastPost.ID}}">Read More</a>{{else}}There are no posts before this.{{end}}</p>
+                                    <p>{{if .LastPost.Body}}{{.LastPost.Body}} ... <a href="http://blog.ChristianHering.com/post/{{.LastPost.ID}}">Read More</a>{{else}}There are no posts before this.{{end}}</p>
                                 </div>
                             </div>
                             <div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{if .NextPost.Image}}{{.NextPost.Image}}{{else}}defaultImage.jpg{{end}}'); background-size: cover;">
                                 <div class="card-body my-3">
                                     <h2 class="mx-auto">{{if .NextPost.Title}}{{.NextPost.Title}}{{else}}Coming Soon...{{end}}</h2>
-                                    <p>{{if .NextPost.BodyShowcase}}{{.NextPost.BodyShowcase}} ... <a href="http://blog.ChristianHering.com/post/{{.NextPost.ID}}">Read More</a>{{else}}There are no posts after this.{{end}}</p>
+                                    <p>{{if .NextPost.Body}}{{.NextPost.Body}} ... <a href="http://blog.ChristianHering.com/post/{{.NextPost.ID}}">Read More</a>{{else}}There are no posts after this.{{end}}</p>
                                 </div>
                             </div>
                         </div>
