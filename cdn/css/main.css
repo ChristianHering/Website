@@ -824,7 +824,20 @@ body, html {
     color: rgb(255, 255, 255);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
+/*
+ * Portfolio Page Image
+*/
+
+.ch-portfolio-landing-image {
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/background.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+}
+
   /*
   * Resume
   */
