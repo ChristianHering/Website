@@ -1,71 +1,55 @@
 {{template "header" .}}
-    <title>Christian Hering - Blog Page #{{- .CurrentPage}}</title>
+{{if eq 1 .CurrentPage}}
+<title>Christian Hering - Blog</title>
+{{else}}
+<title>Christian Hering - Blog Page #{{- .CurrentPage}}</title>
+{{end}}
 
-            <div class="row body-grid-ch" style="background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));">
-                <div class="col-2"></div>
-                    <div class="col-xs-12 col-sm-8">
-    
-                        <div class="py-3"></div>
-                        <!-- Projects -->
-    
-                        <h1>Other Blog Posts</h1>
-                        <p>Enjoyed the read? Try reading another article.</p>
-                        <div class="row">
-                            <div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{$temp := index .Posts 0}}{{$temp.Image}}'); background-size: cover;">
-                                <div class="card-body my-3">
-                                    <h2 class="mx-auto">{{$temp := index .Posts 0}}{{$temp.Title}}</h2>
-                                    <p>{{$temp := index .Posts 0}}{{$temp.Body}} ... <a href="http://blog.ChristianHering.com/post/{{$temp := index .Posts 0}}{{$temp.ID}}">Read More</a></p>
-                                </div>
+    <div class="container">
+        <div class="ch-blog-image">
+            <h1>My Blog</h1>
+            <h6>Enjoy reading? Try reading one of my blog posts!</h6>
+        </div>
+    </div>
+
+        <div class="container">
+
+            <!-- Sorting buttons or something -->
+
+            {{range $i, $unused := .Posts}}
+                {{$temp := modulous $i 2}}{{if eq $temp 0}}
+                    {{if ne $i 6}}
+                        <div class="ch-consulting-blog-showcase row">
+                            <div class="one-half column" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{.Image}}'); background-size: cover;">
+                                <h2 class="mx-auto">{{.Title}}</h2>
+                                <p>{{.Body}} ... <a href="http://blog.ChristianHering.com/post/{{.ID}}">Read More</a></p>
                             </div>
-                            {{$temp := len .Posts}}{{if gt $temp 1}}<div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{$temp := index .Posts 1}}{{$temp.Image}}'); background-size: cover;">
-                                <div class="card-body my-3">
-                                    <h2 class="mx-auto">{{$temp := index .Posts 1}}{{$temp.Title}}</h2>
-                                    <p>{{$temp := index .Posts 1}}{{$temp.Body}} ... <a href="http://blog.ChristianHering.com/post/{{$temp := index .Posts 1}}{{$temp.ID}}">Read More</a></p>
-                                </div>
-                            </div>{{end}}
+                    {{end}}
+                {{else}}
+                        <div class="one-half column" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{.Image}}'); background-size: cover;">
+                            <h2 class="mx-auto">{{.Title}}</h2>
+                            <p>{{.Body}} ... <a href="http://blog.ChristianHering.com/post/{{.ID}}">Read More</a></p>
                         </div>
-                        <div class="row">
-                            {{$temp := len .Posts}}{{if gt $temp 2}}<div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{$temp := index .Posts 2}}{{$temp.Image}}'); background-size: cover;">
-                                <div class="card-body my-3">
-                                    <h2 class="mx-auto">{{$temp := index .Posts 2}}{{$temp.Title}}</h2>
-                                    <p>{{$temp := index .Posts 2}}{{$temp.Body}} ... <a href="http://blog.ChristianHering.com/post/{{$temp := index .Posts 2}}{{$temp.ID}}">Read More</a></p>
-                                </div>
-                            </div>{{end}}
-                            {{$temp := len .Posts}}{{if gt $temp 3}}<div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{$temp := index .Posts 3}}{{$temp.Image}}'); background-size: cover;">
-                                <div class="card-body my-3">
-                                    <h2 class="mx-auto">{{$temp := index .Posts 3}}{{$temp.Title}}</h2>
-                                    <p>{{$temp := index .Posts 3}}{{$temp.Body}} ... <a href="http://blog.ChristianHering.com/post/{{$temp := index .Posts 3}}{{$temp.ID}}">Read More</a></p>
-                                </div>
-                            </div>{{end}}
-                        </div>
-                        <div class="row">
-                            {{$temp := len .Posts}}{{if gt $temp 4}}<div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{$temp := index .Posts 4}}{{$temp.Image}}'); background-size: cover;">
-                                <div class="card-body my-3">
-                                    <h2 class="mx-auto">{{$temp := index .Posts 4}}{{$temp.Title}}</h2>
-                                    <p>{{$temp := index .Posts 4}}{{$temp.Body}} ... <a href="http://blog.ChristianHering.com/post/{{$temp := index .Posts 4}}{{$temp.ID}}">Read More</a></p>
-                                </div>
-                            </div>{{end}}
-                            {{$temp := len .Posts}}{{if gt $temp 5}}<div class="card col-12 col-lg blog-ch mx-3 my-3" style="background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/{{$temp := index .Posts 5}}{{$temp.Image}}'); background-size: cover;">
-                                <div class="card-body my-3">
-                                    <h2 class="mx-auto">{{$temp := index .Posts 5}}{{$temp.Title}}</h2>
-                                    <p>{{$temp := index .Posts 5}}{{$temp.Body}} ... <a href="http://blog.ChristianHering.com/post/{{$temp := index .Posts 5}}{{$temp.ID}}">Read More</a></p>
-                                </div>
-                            </div>{{end}}
-                        </div>
-
-                        {{if ne .CurrentPage 1 }}
-                            {{if eq .CurrentPage 2}} <!-- Special check so /page/2 points to index instead of /page/1  -->
-                                <a href="http://blog.ChristianHering.com">Last</a>
-                            {{else}}
-                                <a href="http://blog.ChristianHering.com/page/{{decrement .CurrentPage}}">Last</a>
-                            {{end}}
-                        {{end}}
-                        {{$temp := len .Posts}}{{if eq $temp 7}}<a href="http://blog.ChristianHering.com/page/{{increment .CurrentPage}}">Next</a>{{end}}
-                        
-                        <!-- Projects -->
-                        <div class="py-5"></div>
-    
                     </div>
-                <div class="col-2"></div>
+                {{end}}
+            {{else}}
+                <!-- No rows? -->
+            {{end}}
+
+            {{$temp := modulous (len .Posts) 2}}{{if eq $temp 1}} <!-- Put a closing div in case len(.Posts) is odd -->
+                </div>
+            {{end}}
+
+            <div class="vertical-pad-1 row">
+                {{if eq .CurrentPage 2}} <!-- Special check so /page/2 points to index instead of /page/1  -->
+                    <a href="http://blog.ChristianHering.com"><button class="button">First Page</button></a>
+                {{else if gt .CurrentPage 2}}
+                    <a href="http://blog.ChristianHering.com/page/{{decrement .CurrentPage}}"><button class="button">Last Page</button></a>
+                {{end}}
+
+                {{if eq (len .Posts) 7}}
+                    <a href="http://blog.ChristianHering.com/page/{{increment .CurrentPage}}"><button class="button">Next Page</button></a>
+                {{end}}
             </div>
+        </div>
 {{template "footer" .}}

@@ -53,9 +53,6 @@ body, html {
     -webkit-touch-callout: none;
   }
   
-  /*
-   * Just a quick hamburger
-   */
   #menuToggle span
   {
     display: block;
@@ -86,10 +83,6 @@ body, html {
     transform-origin: 0% 100%;
   }
   
-  /* 
-   * Transform all the slices of hamburger
-   * into a crossmark.
-   */
   #menuToggle input:checked ~ span
   {
     opacity: 1;
@@ -97,27 +90,17 @@ body, html {
     background: #232323;
   }
   
-  /*
-   * But let's hide the middle one.
-   */
   #menuToggle input:checked ~ span:nth-last-child(3)
   {
     opacity: 0;
     transform: rotate(0deg) scale(0.2, 0.2);
   }
   
-  /*
-   * Ohyeah and the last one should go the other direction
-   */
   #menuToggle input:checked ~ span:nth-last-child(2)
   {
     transform: rotate(-45deg) translate(0, -1px);
   }
   
-  /*
-   * Make this absolute positioned
-   * at the top left of the screen
-   */
   #menu
   {
     position: absolute;
@@ -143,9 +126,6 @@ body, html {
     font-size: 22px;
   }
   
-  /*
-   * And let's slide it in from the left
-   */
   #menuToggle input:checked ~ ul
   {
     transform: none;
@@ -263,8 +243,8 @@ body, html {
       }
   }
   
-  .vertical-pad-1 { padding-top: 1em; }
-  .vertical-pad-3 { padding-top: 3em; }
+  .vertical-pad-1 { padding-top: 1em; padding-bottom: 1em; }
+  .vertical-pad-3 { padding-top: 3em; padding-bottom: 3em; }
   
   .pad-1 { padding: 1em; }
   .pad-3 { padding: 3em; }
@@ -780,6 +760,7 @@ body, html {
   */
   
   .ch-consulting-blog-showcase .column {
+    margin-top: 1em;
     padding: 4em;
   }
   
@@ -883,4 +864,30 @@ body, html {
   .post-ch {
     white-space: pre-wrap;
     font-size: 18px;
+  }
+
+  /*
+   * Blog Image
+  */
+  
+  .ch-blog-image {
+    background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url('https://cdn.jsdelivr.net/gh/ChristianHering/Website@latest/cdn/img/bg.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 50vh;
+  }
+
+  /*
+  * Blog Image Text
+  */
+
+  .ch-blog-image h1 {
+    padding-top: 20vh;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .ch-blog-image p {
+    vertical-align: middle;
   }

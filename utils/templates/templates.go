@@ -3,6 +3,7 @@ package templates
 import (
 	"html/template"
 	"path/filepath"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -44,5 +45,11 @@ var templateFunctions = template.FuncMap{
 	},
 	"decrement": func(n int) int {
 		return n - 1
+	},
+	"modulous": func(n int, x int) int {
+		return n % x
+	},
+	"formatDate": func(n time.Time) string {
+		return n.Format("Jan 2 2006")
 	},
 }
