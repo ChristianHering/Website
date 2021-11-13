@@ -37,8 +37,7 @@ The easiest way to view the current release is to visit [ChristianHering.com](ht
 If you're looking to compile from source, you'll need the following:
 
   * [Go](https://golang.org) installed and [configured](https://golang.org/doc/install)
-  * A [MySQL Database](https://www.mysql.com/) configured with the necessary rows/columns
-  * A local install of [NPM](https://www.npmjs.com/) and [VueJS](https://vuejs.org/) for the admin panel
+  * A [PostgreSQL Database](https://www.postgresql.org/) configured with the necessary rows/columns
   * Port 80 availible on your testing machine (You can change the port in [main.go](/main.go))
   * A little patience :)
 
