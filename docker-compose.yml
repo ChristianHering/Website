@@ -1,0 +1,9 @@
+version: "3.7"
+
+services:
+    website:
+      image: TODO: Add image
+      container_name: website
+      ports:
+          - 8080:8080
+      restart: unless-stopped

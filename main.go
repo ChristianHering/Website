@@ -1,38 +1,33 @@
 package main
 
 import (
-	"fmt"
+	"embed"
+	"io/fs"
+	"log"
 	"net/http"
-
-	"github.com/ChristianHering/Website/admin"
-	"github.com/ChristianHering/Website/blog"
-	"github.com/ChristianHering/Website/cdn"
-	"github.com/ChristianHering/Website/consulting"
-	"github.com/ChristianHering/Website/docs"
-	"github.com/ChristianHering/Website/portfolio"
-	"github.com/ChristianHering/Website/utils"
-	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
 )
 
+//go:embed all:staffing/out
+//go:embed all:personal/public
+var embeddedFS embed.FS
+
 func main() {
-	err := utils.RunUtilSetup() //Utility initialization routine
+	personalFS, err := fs.Sub(embeddedFS, "personal/public")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	mux := mux.NewRouter()
-
-	cdn.Run(mux) //static file serving for development. Replaced by jsDelivr
-
-	admin.Run(mux)      //admin subdomain
-	blog.Run(mux)       //blog subdomain
-	consulting.Run(mux) //top level domain
-	docs.Run(mux)       //docs subdomain
-	portfolio.Run(mux)  //portfolio subdomain
-
-	err = http.ListenAndServe(":80", mux)
+	staffingFS, err := fs.Sub(embeddedFS, "staffing/out")
 	if err != nil {
-		panic(fmt.Sprintf("%+v", errors.WithStack(err)))
+		log.Fatal(err)
+	}
+
+	http.Handle("christianhering.com/", http.FileServer(http.FS(personalFS)))
+
+	http.Handle("staffing.christianhering.com/", http.FileServer(http.FS(staffingFS)))
+
+	err = http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
 	}
 }

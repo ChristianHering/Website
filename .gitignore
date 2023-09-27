@@ -1,30 +1,11 @@
 #Default Go gitignore
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-*.test
-*.out
+./*.exe
+./*.exe~
+./*.dll
+./*.so
+./*.dylib
+./*.test
+./*.out
 
 #Ignore secret and configuration information
-config.json
-
-#VueJS Exclusions
-admin/frontend/node_modules
-
-.env.local
-.env.*.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+./config.json
